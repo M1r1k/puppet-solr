@@ -47,18 +47,10 @@ class solr::config(
     require   => File[$solr_home],
   }
 
-  exec { 'extract-solr':
-    path      =>  ['/usr/bin', '/usr/sbin', '/bin'],
-    command   =>  "tar xzvf ${file_name}",
-    cwd       =>  '/tmp',
-    onlyif    =>  "test -f /tmp/${file_name} && test ! -d /tmp/solr-${solr_version}",
-    require   =>  Exec['solr-download'],
-  }
-
   # have to copy logging jars separately from solr 4.3 onwards
   exec { 'copy-solr':
     path      =>  ['/usr/bin', '/usr/sbin', '/bin'],
-    command   =>  "jar xvf /tmp/solr-${solr_version}/dist/solr-${solr_version}.war; cp /tmp/solr-${solr_version}/example/lib/ext/*.jar WEB-INF/lib",
+    command   =>  "cp /tmp/${file_name} WEB-INF/lib",
     cwd       =>  $solr_home,
     onlyif    =>  "test ! -d ${solr_home}/WEB-INF",
     require   =>  Exec['extract-solr'],
