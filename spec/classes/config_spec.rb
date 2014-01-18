@@ -63,7 +63,7 @@ describe 'solr::config' do
 =end
   it { should contain_exec('copy-solr').with({
     'path'      =>  '["/usr/bin", "/usr/sbin", "/bin"]',
-    'command'   =>  'cp /tmp/solr-4.4.0.jar WEB-INF/lib',
+    'command'   =>  'cp /tmp/solr-core-4.4.0.jar WEB-INF/lib',
     'cwd'       =>  '/usr/share/solr',
     'onlyif'    =>  'test ! -d /usr/share/solr/WEB-INF',
     'require'   =>  'Exec[solr-download]' })

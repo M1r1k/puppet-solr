@@ -20,8 +20,8 @@ class solr::config(
   $jetty_home     = $::solr::params::jetty_home
   $solr_home      = $::solr::params::solr_home
   $solr_version   = $::solr::params::solr_version
-  $file_name      = "solr-core-${solr_version}.jar"
-  $download_site  = 'http://repo1.maven.org/maven2/org/apache/solr/solr-core'
+  $file_name      = "solr-${solr_version}.war"
+  $download_site  = 'http://repo1.maven.org/maven2/org/apache/solr/solr'
 
   #Copy the jetty config file
   file { '/etc/default/jetty':
@@ -37,12 +37,12 @@ class solr::config(
     require   => Package['jetty'],
   }
 
-  # download only if WEB-INF is not present and tgz file is not in /tmp:
+  # download only if solr.web is not present and .war file is not in /tmp:
   exec { 'solr-download':
     command   =>  "wget ${download_site}/${solr_version}/${file_name}",
     cwd       =>  '/tmp',
     creates   =>  "/tmp/${file_name}",
-    onlyif    =>  "test ! -d ${solr_home}/WEB-INF && test ! -f /tmp/${file_name}",
+    onlyif    =>  "test ! -d ${solr_home}/${file_name} && test ! -f /tmp/${file_name}",
     timeout   =>  0,
     require   => File[$solr_home],
   }
@@ -50,9 +50,9 @@ class solr::config(
   # have to copy logging jars separately from solr 4.3 onwards
   exec { 'copy-solr':
     path      =>  ['/usr/bin', '/usr/sbin', '/bin'],
-    command   =>  "cp /tmp/${file_name} WEB-INF/lib",
+    command   =>  "cp /tmp/${file_name} $solr_home",
     cwd       =>  $solr_home,
-    onlyif    =>  "test ! -d ${solr_home}/WEB-INF",
+    onlyif    =>  "test ! -d ${solr_home}/${file_name}",
     require   =>  Exec['solr-download'],
   }
 
