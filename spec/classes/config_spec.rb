@@ -45,14 +45,14 @@ describe 'solr::config' do
   }
 
   it { should contain_exec('solr-download').with({
-    'command'   =>  'wget http://www.eng.lsu.edu/mirrors/apache/lucene/solr/4.4.0/solr-4.4.0.tgz',
+    'command'   =>  'wget http://repo1.maven.org/maven2/org/apache/solr/solr-core/4.4.0/solr-core-4.4.0.jar',
     'cwd'       =>  '/tmp',
-    'creates'   =>  '/tmp/solr-4.4.0.tgz',
-    'onlyif'    =>  'test ! -d /usr/share/solr/WEB-INF && test ! -f /tmp/solr-4.4.0.tgz',
+    'creates'   =>  '/tmp/solr-4.4.0.jar',
+    'onlyif'    =>  'test ! -d /usr/share/solr/WEB-INF && test ! -f /tmp/solr-4.4.0.jar',
     'timeout'   =>  0,
     'require'   =>  'File[/usr/share/solr]'})  
   }
-
+=begin
   it { should contain_exec('extract-solr').with({
     'path'      =>  '["/usr/bin", "/usr/sbin", "/bin"]',
     'command'   =>  'tar xzvf solr-4.4.0.tgz',
@@ -60,10 +60,10 @@ describe 'solr::config' do
     'onlyif'    =>  'test -f /tmp/solr-4.4.0.tgz && test ! -d /tmp/solr-4.4.0',
     'require'   =>  'Exec[solr-download]', })
   }
-
+=end
   it { should contain_exec('copy-solr').with({
     'path'      =>  '["/usr/bin", "/usr/sbin", "/bin"]',
-    'command'   =>  'jar xvf /tmp/solr-4.4.0/dist/solr-4.4.0.war; cp /tmp/solr-4.4.0/example/lib/ext/*.jar WEB-INF/lib',
+    'command'   =>  'cp /tmp/solr-4.4.0.jar WEB-INF/lib',
     'cwd'       =>  '/usr/share/solr',
     'onlyif'    =>  'test ! -d /usr/share/solr/WEB-INF',
     'require'   =>  'Exec[extract-solr]' })
