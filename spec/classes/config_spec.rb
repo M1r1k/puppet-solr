@@ -66,7 +66,7 @@ describe 'solr::config' do
     'command'   =>  'cp /tmp/solr-4.4.0.jar WEB-INF/lib',
     'cwd'       =>  '/usr/share/solr',
     'onlyif'    =>  'test ! -d /usr/share/solr/WEB-INF',
-    'require'   =>  'Exec[extract-solr]' })
+    'require'   =>  'Exec[solr-download]' })
   }
 
 end

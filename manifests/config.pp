@@ -53,7 +53,7 @@ class solr::config(
     command   =>  "cp /tmp/${file_name} WEB-INF/lib",
     cwd       =>  $solr_home,
     onlyif    =>  "test ! -d ${solr_home}/WEB-INF",
-    require   =>  Exec['extract-solr'],
+    require   =>  Exec['solr-download'],
   }
 
   file { '/var/lib/solr':
